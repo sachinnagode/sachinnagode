@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sachin_nagwade/routes.dart';
-import 'package:url_strategy/url_strategy.dart';
+import 'package:url_strategy/url_strategy.dart' show setPathUrlStrategy;
 
 void main() {
   setPathUrlStrategy();
@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) => Routes.generateRoute(settings),
       initialRoute: '/',
     );

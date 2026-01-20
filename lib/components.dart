@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TabsWeb extends StatefulWidget {
-  final String title;
-
-  const TabsWeb(this.title, {super.key});
+  final title;
+  final route;
+  const TabsWeb({super.key, this.title, this.route});
 
   @override
   State<TabsWeb> createState() => _TabsWebState();
@@ -15,32 +15,67 @@ class _TabsWebState extends State<TabsWeb> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() {
-          isSelected = true;
-        });
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(widget.route);
       },
-      onExit: (_) {
-        setState(() {
-          isSelected = false;
-        });
-      },
-      child: AnimatedDefaultTextStyle(
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.elasticIn,
-        style: isSelected
-            ? GoogleFonts.openSans(
-                shadows: [Shadow(color: Colors.black, offset: Offset(0, -5))],
-                fontSize: 23.0,
-                color: Colors.transparent,
-                decoration: TextDecoration.underline,
-                decorationThickness: 2,
-                decorationColor: Colors.tealAccent,
-              )
-            : GoogleFonts.openSans(fontSize: 20.0, color: Colors.black),
-        child: Text(widget.title),
+      child: MouseRegion(
+        onEnter: (_) {
+          setState(() {
+            isSelected = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            isSelected = false;
+          });
+        },
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.elasticIn,
+          style: isSelected
+              ? GoogleFonts.openSans(
+                  shadows: [Shadow(color: Colors.black, offset: Offset(0, -5))],
+                  fontSize: 23.0,
+                  color: Colors.transparent,
+                  decoration: TextDecoration.underline,
+                  decorationThickness: 2,
+                  decorationColor: Colors.tealAccent,
+                )
+              : GoogleFonts.openSans(fontSize: 20.0, color: Colors.black),
+          child: Text(widget.title),
+        ),
       ),
+    );
+  }
+}
+
+class TabsMobile extends StatefulWidget {
+  final text;
+  final route;
+
+  const TabsMobile({super.key, this.text, this.route});
+
+  @override
+  State<TabsMobile> createState() => _TabsMobileState();
+}
+
+class _TabsMobileState extends State<TabsMobile> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      elevation: 20.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      height: 50.0,
+      minWidth: 200.0,
+      color: Colors.black,
+      child: Text(
+        widget.text,
+        style: GoogleFonts.openSans(fontSize: 20.0, color: Colors.white),
+      ),
+      onPressed: () {
+        Navigator.of(context).pushNamed(widget.route);
+      },
     );
   }
 }
@@ -72,10 +107,35 @@ class Sans extends StatelessWidget {
   }
 }
 
+class AbelCustom extends StatelessWidget {
+  final text;
+  final size;
+  final color;
+  final fontWeight;
+  const AbelCustom({
+    super.key,
+    @required this.text,
+    @required this.size,
+    this.color,
+    this.fontWeight,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.abel(
+        fontSize: size,
+        color: color == null ? Colors.black : color,
+        fontWeight: fontWeight == null ? FontWeight.normal : fontWeight,
+      ),
+    );
+  }
+}
+
 class TextForm extends StatelessWidget {
   @required
-  final heading;
-  final width;
+  final text;
+  final containerWidth;
   final hitText;
   final maxLines;
   final maxLength;
@@ -84,8 +144,8 @@ class TextForm extends StatelessWidget {
 
   const TextForm({
     super.key,
-    this.heading,
-    this.width,
+    this.text,
+    this.containerWidth,
     this.hitText,
     this.maxLines,
     this.maxLength,
@@ -95,10 +155,10 @@ class TextForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Sans(heading, 16.0),
+        Sans(text, 16.0),
         SizedBox(height: 5.0),
         SizedBox(
-          width: width,
+          width: containerWidth,
           child: TextFormField(
             maxLines: maxLines,
             // maxLength: maxLength,
@@ -125,25 +185,29 @@ class TextForm extends StatelessWidget {
   }
 }
 
-class AnimatedCardWeb extends StatefulWidget {
+class AnimatedCard extends StatefulWidget {
   final imagePath;
   final text;
   final fit;
   final reverse;
+  final height;
+  final width;
 
-  const AnimatedCardWeb({
+  const AnimatedCard({
     super.key,
     @required this.imagePath,
-    @required this.text,
+    this.text,
     this.fit,
-    @required this.reverse,
+    this.height,
+    this.width,
+    this.reverse,
   });
 
   @override
-  State<AnimatedCardWeb> createState() => _AnimatedCardWebState();
+  State<AnimatedCard> createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardWebState extends State<AnimatedCardWeb>
+class _AnimatedCardState extends State<AnimatedCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller = AnimationController(
     vsync: this,
@@ -151,8 +215,8 @@ class _AnimatedCardWebState extends State<AnimatedCardWeb>
   )..repeat(reverse: true);
 
   late Animation<Offset> _animation = Tween(
-    begin: widget.reverse ? Offset(0, 0.08) : Offset.zero,
-    end: widget.reverse ? Offset.zero : Offset(0, 0.08),
+    begin: widget.reverse == true ? Offset(0, 0.08) : Offset.zero,
+    end: widget.reverse == true ? Offset.zero : Offset(0, 0.08),
   ).animate(_controller);
 
   @override
@@ -173,12 +237,12 @@ class _AnimatedCardWebState extends State<AnimatedCardWeb>
             children: [
               Image.asset(
                 widget.imagePath,
-                height: 200.0,
-                width: 200.0,
+                height: widget.height == null ? 200.0 : widget.height,
+                width: widget.width == null ? 200.0 : widget.width,
                 fit: widget.fit == null ? null : widget.fit,
               ),
               SizedBox(height: 10),
-              SansBold(widget.text, 15.0),
+              widget.text == null ? SizedBox() : SansBold(widget.text, 15.0),
             ],
           ),
         ),
