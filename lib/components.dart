@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 
 class TabsWeb extends StatefulWidget {
   final title;
@@ -139,6 +141,8 @@ class TextForm extends StatelessWidget {
   final hitText;
   final maxLines;
   final maxLength;
+  final controller;
+  final validator;
 
   // final hint
 
@@ -149,6 +153,8 @@ class TextForm extends StatelessWidget {
     this.hitText,
     this.maxLines,
     this.maxLength,
+    this.controller,
+    this.validator,
   });
 
   @override
@@ -161,7 +167,8 @@ class TextForm extends StatelessWidget {
           width: containerWidth,
           child: TextFormField(
             maxLines: maxLines,
-            // maxLength: maxLength,
+            controller: controller,
+            validator: validator,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 2.0),
@@ -249,4 +256,40 @@ class _AnimatedCardState extends State<AnimatedCard>
       ),
     );
   }
+}
+
+class AddDataFireStore {
+  var logger = Logger();
+  CollectionReference response = FirebaseFirestore.instance.collection(
+    'messages',
+  );
+
+  Future<void> addResponse(
+    final firstName,
+    final lastName,
+    final email,
+    final phoneNumber,
+    final message,
+  ) async {
+    return response
+        .add({
+          "firstName": firstName,
+          "lastName": lastName,
+          "email": email,
+          "phoneNumber": phoneNumber,
+          "message": message,
+        })
+        .then((value) => logger.d("Success"))
+        .catchError((error) => logger.e(error));
+  }
+}
+
+Future DialogError(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: SansBold("Message Submitted", 20.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    ),
+  );
 }

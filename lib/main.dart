@@ -1,8 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sachin_nagwade/firebase_options.dart';
 import 'package:sachin_nagwade/routes.dart';
 import 'package:url_strategy/url_strategy.dart' show setPathUrlStrategy;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   setPathUrlStrategy();
   runApp(const MyApp());
 }
