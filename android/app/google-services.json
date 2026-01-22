@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "135545929899",
+    "project_id": "sachin-nagwade",
+    "storage_bucket": "sachin-nagwade.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135545929899:android:a1bc7df96001b43d4937ee",
+        "android_client_info": {
+          "package_name": "com.core3.in.sachin_nagwade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZhFTlC7TtBlkyyfE8LxcJdT_lKm1wfpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
