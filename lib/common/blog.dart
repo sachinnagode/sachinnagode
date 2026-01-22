@@ -1,107 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:sachin_nagwade/Constants.dart';
 
 import '../components.dart';
 
-class BlogWeb extends StatefulWidget {
-  const BlogWeb({super.key});
+class Blog extends StatefulWidget {
+  const Blog({super.key});
 
   @override
-  State<BlogWeb> createState() => _BlogWebState();
+  State<Blog> createState() => _BlogState();
 }
 
-class _BlogWebState extends State<BlogWeb> {
+class _BlogState extends State<Blog> {
   @override
   Widget build(BuildContext context) {
+    bool isWeb = MediaQuery.of(context).size.width > 800;
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
-        endDrawer: Drawer(
-          backgroundColor: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DrawerHeader(
-                padding: EdgeInsetsGeometry.only(bottom: 20.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2.0, color: Colors.black),
-                  ),
-                  child: Image.asset(
-                    'assets/me_circle.png',
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
-              ),
-              TabsMobile(text: "Home", route: '/'),
-              SizedBox(height: 20.0),
-              TabsMobile(text: "Works", route: "/works"),
-              SizedBox(height: 20.0),
-              TabsMobile(text: "Blog", route: "/blog"),
-              SizedBox(height: 20.0),
-              TabsMobile(text: "About", route: "/about"),
-              SizedBox(height: 20.0),
-              TabsMobile(text: "Contact", route: "/contact"),
-              SizedBox(height: 40.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    onPressed: () async => await launchUrlString(
-                      "https://www.instagram.com/snagwade/",
-                    ),
-                    icon: SvgPicture.asset(
-                      "assets/instagram.svg",
-                      color: Colors.black,
-                      width: 35.0,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async =>
-                        await launchUrlString("https://x.com/sachinnagode/"),
-                    icon: SvgPicture.asset(
-                      "assets/twitter.svg",
-                      color: Colors.black,
-                      width: 35.0,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async => await launchUrlString(
-                      "https://github.com/sachinnagode/",
-                    ),
-                    icon: SvgPicture.asset(
-                      "assets/github.svg",
-                      color: Colors.black,
-                      width: 35.0,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        endDrawer: DrawersMobile(),
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 500.0,
+                expandedHeight: isWeb ? 500.0 : 400.0,
                 backgroundColor: Colors.white,
                 iconTheme: IconThemeData(size: 35.0, color: Colors.black),
                 flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: isWeb ? false : true,
                   title: Container(
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(3.0),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 7.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isWeb ? 7.0 : 4.0,
+                    ),
                     child: AbelCustom(
                       text: "Welcome to my blog",
-                      size: 30.0,
+                      size: isWeb ? 30.0 : 24.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -117,7 +56,7 @@ class _BlogWebState extends State<BlogWeb> {
           },
           body: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("article")
+                .collection(FireStoreCollections.ARTICLE)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -127,8 +66,9 @@ class _BlogWebState extends State<BlogWeb> {
                     DocumentSnapshot documentSnapshot =
                         snapshot.data!.docs[index];
                     return BlogPost(
-                      title: documentSnapshot['title'],
-                      body: documentSnapshot['body'],
+                      title: documentSnapshot[FireStoreColumns.TITLE],
+                      body: documentSnapshot[FireStoreColumns.BODY],
+                      isWeb: isWeb,
                     );
                   },
                 );
@@ -146,7 +86,13 @@ class _BlogWebState extends State<BlogWeb> {
 class BlogPost extends StatefulWidget {
   final title;
   final body;
-  const BlogPost({super.key, @required this.title, @required this.body});
+  final isWeb;
+  const BlogPost({
+    super.key,
+    @required this.title,
+    @required this.body,
+    @required this.isWeb,
+  });
 
   @override
   State<BlogPost> createState() => _BlogPostState();
@@ -157,9 +103,11 @@ class _BlogPostState extends State<BlogPost> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 70.0, right: 70.0, top: 40.0),
+      padding: widget.isWeb
+          ? EdgeInsets.only(left: 70.0, right: 70.0, top: 40.0)
+          : EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           border: Border.all(
             style: BorderStyle.solid,
@@ -180,7 +128,7 @@ class _BlogPostState extends State<BlogPost> {
                     borderRadius: BorderRadius.circular(3.0),
                   ),
                   child: AbelCustom(
-                    text: widget.title,
+                    text: widget.title.toString(),
                     size: 25.0,
                     color: Colors.white,
                   ),
@@ -200,7 +148,7 @@ class _BlogPostState extends State<BlogPost> {
             ),
             SizedBox(height: 7.0),
             Text(
-              widget.body,
+              widget.body.toString(),
               style: GoogleFonts.openSans(fontSize: 15.0),
               maxLines: expand ? null : 3,
               overflow: expand ? TextOverflow.visible : TextOverflow.ellipsis,

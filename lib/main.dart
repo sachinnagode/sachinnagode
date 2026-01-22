@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:sachin_nagwade/firebase_options.dart';
+import 'package:sachin_nagwade/firebase_options_local.dart';
 import 'package:sachin_nagwade/routes.dart';
 import 'package:url_strategy/url_strategy.dart' show setPathUrlStrategy;
+
+import 'Constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) => Routes.generateRoute(settings),
-      initialRoute: '/',
+      initialRoute: Tabs.HOME_ROUTE,
     );
   }
 }
