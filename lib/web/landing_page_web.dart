@@ -117,9 +117,9 @@ class _LandingPageWebState extends State<LandingPageWeb> {
                     ),
                     Sans(
                       "the art security for Android, Ios, Web, Mac, Linux and Windows",
-                      15,
+                      15.0,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.0),
                     Row(
                       children: [
                         tealContainer("Flutter"),

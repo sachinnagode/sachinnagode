@@ -112,7 +112,7 @@ class _LandingPageMobileState extends State<LandingPageMobile> {
                   ),
                   Sans(
                     "the art security for Android, Ios, Web, Mac, Linux and Windows",
-                    15,
+                    15.0,
                   ),
                   SizedBox(height: 10.0),
                   Wrap(

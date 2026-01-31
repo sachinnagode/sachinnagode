@@ -35,7 +35,7 @@ class _AboutMobileState extends State<AboutMobile> {
                   radius: 113.0,
                   backgroundColor: Colors.black,
                   child: CircleAvatar(
-                    radius: 110,
+                    radius: 110.0,
                     backgroundColor: Colors.white,
                     child: Image.asset(
                       "assets/me_circle.png",
@@ -64,7 +64,7 @@ class _AboutMobileState extends State<AboutMobile> {
                     ),
                     Sans(
                       "the art security for Android, Ios, Web, Mac, Linux and Windows",
-                      15,
+                      15.0,
                     ),
                     SizedBox(height: 10.0),
                     Wrap(
